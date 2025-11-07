@@ -1,0 +1,524 @@
+{
+  "chaoslib-version": "1.44.0",
+  "platform": "Windows-10-10.0.26100-SP0",
+  "node": "DESKTOP-MBT929U",
+  "experiment": {
+    "version": "1.0.0",
+    "title": "Circuit (10 calls) + Single-shot Retries with Jitter — with Initial & Final Loads",
+    "description": "Run initial baseline loads, scale backend to 0 and run chaos loads to trip circuit + retries, then recover and run final loads. Collect logs for each phase.",
+    "steady-state-hypothesis": {
+      "title": "Client and Backend Deployments exist",
+      "probes": [
+        {
+          "type": "probe",
+          "name": "client-pod-exists",
+          "tolerance": 1,
+          "provider": {
+            "type": "python",
+            "module": "chaosk8s.pod.probes",
+            "func": "count_pods",
+            "arguments": {
+              "label_selector": "app=client",
+              "ns": "default"
+            }
+          }
+        },
+        {
+          "type": "probe",
+          "name": "backend-pod-exists",
+          "tolerance": 1,
+          "provider": {
+            "type": "python",
+            "module": "chaosk8s.pod.probes",
+            "func": "count_pods",
+            "arguments": {
+              "label_selector": "app=backend",
+              "ns": "default"
+            }
+          }
+        }
+      ]
+    },
+    "method": [
+      {
+        "type": "action",
+        "name": "initial-load-circuit-3",
+        "provider": {
+          "type": "process",
+          "path": "python",
+          "arguments": "load_tester.py initial --task circuit --count 3"
+        }
+      },
+      {
+        "type": "action",
+        "name": "initial-load-retries-1",
+        "provider": {
+          "type": "process",
+          "path": "python",
+          "arguments": "load_tester.py initial --task retries"
+        }
+      },
+      {
+        "type": "action",
+        "name": "collect-initial-logs",
+        "provider": {
+          "type": "process",
+          "path": "python",
+          "arguments": "log_collector.py initial"
+        }
+      },
+      {
+        "type": "action",
+        "name": "scale-down-backend",
+        "provider": {
+          "type": "python",
+          "module": "chaosk8s.deployment.actions",
+          "func": "scale_deployment",
+          "arguments": {
+            "name": "backend-deployment",
+            "ns": "default",
+            "replicas": 0
+          }
+        },
+        "pauses": {
+          "after": 10
+        }
+      },
+      {
+        "type": "action",
+        "name": "during-chaos-load-circuit-10",
+        "provider": {
+          "type": "process",
+          "path": "python",
+          "arguments": "load_tester.py during-chaos --task circuit --count 10"
+        }
+      },
+      {
+        "type": "action",
+        "name": "during-chaos-load-retries-1",
+        "provider": {
+          "type": "process",
+          "path": "python",
+          "arguments": "load_tester.py during-chaos --task retries"
+        }
+      },
+      {
+        "type": "action",
+        "name": "collect-during-chaos-logs",
+        "provider": {
+          "type": "process",
+          "path": "python",
+          "arguments": "log_collector.py during-chaos"
+        }
+      }
+    ],
+    "rollbacks": [
+      {
+        "type": "action",
+        "name": "scale-up-backend",
+        "provider": {
+          "type": "python",
+          "module": "chaosk8s.deployment.actions",
+          "func": "scale_deployment",
+          "arguments": {
+            "name": "backend-deployment",
+            "ns": "default",
+            "replicas": 1
+          }
+        }
+      },
+      {
+        "type": "action",
+        "name": "post-recovery-wait",
+        "provider": {
+          "type": "process",
+          "path": "python",
+          "arguments": "-c \"import time; time.sleep(15)\""
+        }
+      },
+      {
+        "type": "action",
+        "name": "final-load-circuit-3",
+        "provider": {
+          "type": "process",
+          "path": "python",
+          "arguments": "load_tester.py final --task circuit --count 3"
+        }
+      },
+      {
+        "type": "action",
+        "name": "final-load-retries-1",
+        "provider": {
+          "type": "process",
+          "path": "python",
+          "arguments": "load_tester.py final --task retries"
+        }
+      },
+      {
+        "type": "action",
+        "name": "collect-final-logs",
+        "provider": {
+          "type": "process",
+          "path": "python",
+          "arguments": "log_collector.py final"
+        }
+      }
+    ],
+    "dry": null
+  },
+  "start": "2025-11-07T21:12:54.139764+00:00",
+  "status": "completed",
+  "deviated": true,
+  "steady_states": {
+    "before": {
+      "steady_state_met": true,
+      "probes": [
+        {
+          "activity": {
+            "type": "probe",
+            "name": "client-pod-exists",
+            "tolerance": 1,
+            "provider": {
+              "type": "python",
+              "module": "chaosk8s.pod.probes",
+              "func": "count_pods",
+              "arguments": {
+                "label_selector": "app=client",
+                "ns": "default"
+              }
+            }
+          },
+          "output": 1,
+          "start": "2025-11-07T21:12:54.141761+00:00",
+          "status": "succeeded",
+          "end": "2025-11-07T21:12:54.153091+00:00",
+          "duration": 0.01133,
+          "tolerance_met": true
+        },
+        {
+          "activity": {
+            "type": "probe",
+            "name": "backend-pod-exists",
+            "tolerance": 1,
+            "provider": {
+              "type": "python",
+              "module": "chaosk8s.pod.probes",
+              "func": "count_pods",
+              "arguments": {
+                "label_selector": "app=backend",
+                "ns": "default"
+              }
+            }
+          },
+          "output": 1,
+          "start": "2025-11-07T21:12:54.153614+00:00",
+          "status": "succeeded",
+          "end": "2025-11-07T21:12:54.163642+00:00",
+          "duration": 0.010028,
+          "tolerance_met": true
+        }
+      ]
+    },
+    "after": {
+      "steady_state_met": false,
+      "probes": [
+        {
+          "activity": {
+            "type": "probe",
+            "name": "client-pod-exists",
+            "tolerance": 1,
+            "provider": {
+              "type": "python",
+              "module": "chaosk8s.pod.probes",
+              "func": "count_pods",
+              "arguments": {
+                "label_selector": "app=client",
+                "ns": "default"
+              }
+            }
+          },
+          "output": 1,
+          "start": "2025-11-07T21:13:33.132597+00:00",
+          "status": "succeeded",
+          "end": "2025-11-07T21:13:33.142264+00:00",
+          "duration": 0.009667,
+          "tolerance_met": true
+        },
+        {
+          "activity": {
+            "type": "probe",
+            "name": "backend-pod-exists",
+            "tolerance": 1,
+            "provider": {
+              "type": "python",
+              "module": "chaosk8s.pod.probes",
+              "func": "count_pods",
+              "arguments": {
+                "label_selector": "app=backend",
+                "ns": "default"
+              }
+            }
+          },
+          "output": 0,
+          "start": "2025-11-07T21:13:33.142785+00:00",
+          "status": "succeeded",
+          "end": "2025-11-07T21:13:33.150061+00:00",
+          "duration": 0.007276,
+          "tolerance_met": false
+        }
+      ]
+    },
+    "during": []
+  },
+  "run": [
+    {
+      "activity": {
+        "type": "action",
+        "name": "initial-load-circuit-3",
+        "provider": {
+          "type": "process",
+          "path": "python",
+          "arguments": "load_tester.py initial --task circuit --count 3"
+        }
+      },
+      "output": {
+        "status": 0,
+        "stdout": "[load_tester] CWD: C:\\Users\\Admin\\Documents\\UCD\\DS\\lab3\\code\\chaos\r\n[load_tester] Phase: initial | Task: circuit\r\n[load_tester] Writing: C:\\Users\\Admin\\Documents\\UCD\\DS\\lab3\\code\\chaos\\load-logs\\initial_circuit_20251107-211254.log\r\n[load_tester] CIRCUIT: 3 calls -> C:\\Users\\Admin\\Documents\\UCD\\DS\\lab3\\code\\chaos\\load-logs\\initial_circuit_20251107-211254.log\r\n[load_tester] Done.\r\n",
+        "stderr": ""
+      },
+      "start": "2025-11-07T21:12:54.165257+00:00",
+      "status": "succeeded",
+      "end": "2025-11-07T21:12:55.282482+00:00",
+      "duration": 1.117225
+    },
+    {
+      "activity": {
+        "type": "action",
+        "name": "initial-load-retries-1",
+        "provider": {
+          "type": "process",
+          "path": "python",
+          "arguments": "load_tester.py initial --task retries"
+        }
+      },
+      "output": {
+        "status": 0,
+        "stdout": "[load_tester] CWD: C:\\Users\\Admin\\Documents\\UCD\\DS\\lab3\\code\\chaos\r\n[load_tester] Phase: initial | Task: retries\r\n[load_tester] Writing: C:\\Users\\Admin\\Documents\\UCD\\DS\\lab3\\code\\chaos\\load-logs\\initial_retries_20251107-211255.log\r\n[load_tester] RETRIES: single call -> C:\\Users\\Admin\\Documents\\UCD\\DS\\lab3\\code\\chaos\\load-logs\\initial_retries_20251107-211255.log\r\n[load_tester] Done.\r\n",
+        "stderr": ""
+      },
+      "start": "2025-11-07T21:12:55.283479+00:00",
+      "status": "succeeded",
+      "end": "2025-11-07T21:12:55.466281+00:00",
+      "duration": 0.182802
+    },
+    {
+      "activity": {
+        "type": "action",
+        "name": "collect-initial-logs",
+        "provider": {
+          "type": "process",
+          "path": "python",
+          "arguments": "log_collector.py initial"
+        }
+      },
+      "output": {
+        "status": 0,
+        "stdout": "Collecting logs for phase: initial\r\nLog collection done: chaos-logs\\initial-20251107-211255\r\n",
+        "stderr": ""
+      },
+      "start": "2025-11-07T21:12:55.467283+00:00",
+      "status": "succeeded",
+      "end": "2025-11-07T21:12:56.139724+00:00",
+      "duration": 0.672441
+    },
+    {
+      "activity": {
+        "type": "action",
+        "name": "scale-down-backend",
+        "provider": {
+          "type": "python",
+          "module": "chaosk8s.deployment.actions",
+          "func": "scale_deployment",
+          "arguments": {
+            "name": "backend-deployment",
+            "ns": "default",
+            "replicas": 0
+          }
+        },
+        "pauses": {
+          "after": 10
+        }
+      },
+      "output": null,
+      "start": "2025-11-07T21:12:56.139724+00:00",
+      "status": "succeeded",
+      "end": "2025-11-07T21:12:56.151745+00:00",
+      "duration": 0.012021
+    },
+    {
+      "activity": {
+        "type": "action",
+        "name": "during-chaos-load-circuit-10",
+        "provider": {
+          "type": "process",
+          "path": "python",
+          "arguments": "load_tester.py during-chaos --task circuit --count 10"
+        }
+      },
+      "output": {
+        "status": 0,
+        "stdout": "[load_tester] CWD: C:\\Users\\Admin\\Documents\\UCD\\DS\\lab3\\code\\chaos\r\n[load_tester] Phase: during-chaos | Task: circuit\r\n[load_tester] Writing: C:\\Users\\Admin\\Documents\\UCD\\DS\\lab3\\code\\chaos\\load-logs\\during-chaos_circuit_20251107-211306.log\r\n[load_tester] CIRCUIT: 10 calls -> C:\\Users\\Admin\\Documents\\UCD\\DS\\lab3\\code\\chaos\\load-logs\\during-chaos_circuit_20251107-211306.log\r\n[load_tester] Done.\r\n",
+        "stderr": ""
+      },
+      "start": "2025-11-07T21:13:06.153191+00:00",
+      "status": "succeeded",
+      "end": "2025-11-07T21:13:11.854400+00:00",
+      "duration": 5.701209
+    },
+    {
+      "activity": {
+        "type": "action",
+        "name": "during-chaos-load-retries-1",
+        "provider": {
+          "type": "process",
+          "path": "python",
+          "arguments": "load_tester.py during-chaos --task retries"
+        }
+      },
+      "output": {
+        "status": 0,
+        "stdout": "[load_tester] CWD: C:\\Users\\Admin\\Documents\\UCD\\DS\\lab3\\code\\chaos\r\n[load_tester] Phase: during-chaos | Task: retries\r\n[load_tester] Writing: C:\\Users\\Admin\\Documents\\UCD\\DS\\lab3\\code\\chaos\\load-logs\\during-chaos_retries_20251107-211312.log\r\n[load_tester] RETRIES: single call -> C:\\Users\\Admin\\Documents\\UCD\\DS\\lab3\\code\\chaos\\load-logs\\during-chaos_retries_20251107-211312.log\r\n[load_tester] Done.\r\n",
+        "stderr": ""
+      },
+      "start": "2025-11-07T21:13:11.854400+00:00",
+      "status": "succeeded",
+      "end": "2025-11-07T21:13:32.505280+00:00",
+      "duration": 20.65088
+    },
+    {
+      "activity": {
+        "type": "action",
+        "name": "collect-during-chaos-logs",
+        "provider": {
+          "type": "process",
+          "path": "python",
+          "arguments": "log_collector.py during-chaos"
+        }
+      },
+      "output": {
+        "status": 0,
+        "stdout": "Collecting logs for phase: during-chaos\r\nLog collection done: chaos-logs\\during-chaos-20251107-211332\r\n",
+        "stderr": ""
+      },
+      "start": "2025-11-07T21:13:32.505280+00:00",
+      "status": "succeeded",
+      "end": "2025-11-07T21:13:33.132070+00:00",
+      "duration": 0.62679
+    }
+  ],
+  "rollbacks": [
+    {
+      "activity": {
+        "type": "action",
+        "name": "scale-up-backend",
+        "provider": {
+          "type": "python",
+          "module": "chaosk8s.deployment.actions",
+          "func": "scale_deployment",
+          "arguments": {
+            "name": "backend-deployment",
+            "ns": "default",
+            "replicas": 1
+          }
+        }
+      },
+      "output": null,
+      "start": "2025-11-07T21:13:33.151627+00:00",
+      "status": "succeeded",
+      "end": "2025-11-07T21:13:33.162508+00:00",
+      "duration": 0.010881
+    },
+    {
+      "activity": {
+        "type": "action",
+        "name": "post-recovery-wait",
+        "provider": {
+          "type": "process",
+          "path": "python",
+          "arguments": "-c \"import time; time.sleep(15)\""
+        }
+      },
+      "output": {
+        "status": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "start": "2025-11-07T21:13:33.163558+00:00",
+      "status": "succeeded",
+      "end": "2025-11-07T21:13:48.205270+00:00",
+      "duration": 15.041712
+    },
+    {
+      "activity": {
+        "type": "action",
+        "name": "final-load-circuit-3",
+        "provider": {
+          "type": "process",
+          "path": "python",
+          "arguments": "load_tester.py final --task circuit --count 3"
+        }
+      },
+      "output": {
+        "status": 0,
+        "stdout": "[load_tester] CWD: C:\\Users\\Admin\\Documents\\UCD\\DS\\lab3\\code\\chaos\r\n[load_tester] Phase: final | Task: circuit\r\n[load_tester] Writing: C:\\Users\\Admin\\Documents\\UCD\\DS\\lab3\\code\\chaos\\load-logs\\final_circuit_20251107-211348.log\r\n[load_tester] CIRCUIT: 3 calls -> C:\\Users\\Admin\\Documents\\UCD\\DS\\lab3\\code\\chaos\\load-logs\\final_circuit_20251107-211348.log\r\n[load_tester] Done.\r\n",
+        "stderr": ""
+      },
+      "start": "2025-11-07T21:13:48.205270+00:00",
+      "status": "succeeded",
+      "end": "2025-11-07T21:13:49.355864+00:00",
+      "duration": 1.150594
+    },
+    {
+      "activity": {
+        "type": "action",
+        "name": "final-load-retries-1",
+        "provider": {
+          "type": "process",
+          "path": "python",
+          "arguments": "load_tester.py final --task retries"
+        }
+      },
+      "output": {
+        "status": 0,
+        "stdout": "[load_tester] CWD: C:\\Users\\Admin\\Documents\\UCD\\DS\\lab3\\code\\chaos\r\n[load_tester] Phase: final | Task: retries\r\n[load_tester] Writing: C:\\Users\\Admin\\Documents\\UCD\\DS\\lab3\\code\\chaos\\load-logs\\final_retries_20251107-211349.log\r\n[load_tester] RETRIES: single call -> C:\\Users\\Admin\\Documents\\UCD\\DS\\lab3\\code\\chaos\\load-logs\\final_retries_20251107-211349.log\r\n[load_tester] Done.\r\n",
+        "stderr": ""
+      },
+      "start": "2025-11-07T21:13:49.356862+00:00",
+      "status": "succeeded",
+      "end": "2025-11-07T21:13:49.548253+00:00",
+      "duration": 0.191391
+    },
+    {
+      "activity": {
+        "type": "action",
+        "name": "collect-final-logs",
+        "provider": {
+          "type": "process",
+          "path": "python",
+          "arguments": "log_collector.py final"
+        }
+      },
+      "output": {
+        "status": 0,
+        "stdout": "Collecting logs for phase: final\r\nLog collection done: chaos-logs\\final-20251107-211349\r\n",
+        "stderr": ""
+      },
+      "start": "2025-11-07T21:13:49.549251+00:00",
+      "status": "succeeded",
+      "end": "2025-11-07T21:13:50.173346+00:00",
+      "duration": 0.624095
+    }
+  ],
+  "end": "2025-11-07T21:13:50.173869+00:00",
+  "duration": 56.03410530090332
+}

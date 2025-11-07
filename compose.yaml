@@ -1,0 +1,22 @@
+services:
+  backend:
+    build: ./backend/.
+    container_name: backend
+    ports:
+      - "5000:5000"
+    networks:
+      - web-app
+    volumes:
+      - ./backend:/app
+  client:
+    build: ./client/.
+    container_name: client
+    ports:
+      - "80:5001"
+    networks:
+      - web-app
+    volumes:
+      - ./client:/app
+networks:
+  web-app:
+    driver: bridge

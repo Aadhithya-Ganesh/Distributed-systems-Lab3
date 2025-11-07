@@ -1,0 +1,39 @@
+2025-11-06 22:19:34,438 - circuit_breaker - INFO - === New request received ===
+2025-11-06 22:19:34,439 - circuit_breaker - INFO - Circuit Breaker state before call: closed
+2025-11-06 22:19:34,448 - circuit_breaker - INFO - Backend responded with status code: 200
+2025-11-06 22:19:34,449 - circuit_breaker - INFO - Backend returned successful response
+2025-11-06 22:19:34,450 - circuit_breaker - INFO - Call completed successfully through circuit breaker
+2025-11-06 22:19:34,451 - circuit_breaker - INFO - Circuit Breaker recorded success
+2025-11-06 22:19:34,451 - circuit_breaker - INFO - Request completed successfully in 0.01 seconds
+2025-11-06 22:19:34,452 - circuit_breaker - INFO - Final Circuit Breaker state: closed
+2025-11-06 22:19:39,154 - circuit_breaker - INFO - === New request received ===
+2025-11-06 22:19:39,155 - circuit_breaker - INFO - Circuit Breaker state before call: closed
+2025-11-06 22:19:39,161 - circuit_breaker - INFO - Backend responded with status code: 500
+2025-11-06 22:19:39,161 - circuit_breaker - ERROR - Backend returned server error: 500
+2025-11-06 22:19:39,161 - circuit_breaker - ERROR - Circuit Breaker recorded failure: HTTPError: 500 Server Error: INTERNAL SERVER ERROR for url: http://backend:5000/circuit
+2025-11-06 22:19:39,162 - circuit_breaker - ERROR - Request failed with error after 0.01 seconds: HTTPError: 500 Server Error: INTERNAL SERVER ERROR for url: http://backend:5000/circuit
+2025-11-06 22:19:42,964 - circuit_breaker - INFO - === New request received ===
+2025-11-06 22:19:42,965 - circuit_breaker - INFO - Circuit Breaker state before call: closed
+2025-11-06 22:19:42,969 - circuit_breaker - INFO - Backend responded with status code: 500
+2025-11-06 22:19:42,969 - circuit_breaker - ERROR - Backend returned server error: 500
+2025-11-06 22:19:42,970 - circuit_breaker - ERROR - Circuit Breaker recorded failure: HTTPError: 500 Server Error: INTERNAL SERVER ERROR for url: http://backend:5000/circuit
+2025-11-06 22:19:42,970 - circuit_breaker - WARNING - Circuit Breaker state changed from closed to open
+2025-11-06 22:19:42,971 - circuit_breaker - ERROR - Request failed due to open circuit breaker after 0.01 seconds
+2025-11-06 22:19:49,795 - circuit_breaker - INFO - === New request received ===
+2025-11-06 22:19:49,796 - circuit_breaker - WARNING - Circuit Breaker state changed from open to half-open
+2025-11-06 22:19:49,796 - circuit_breaker - INFO - Circuit Breaker state before call: half-open
+2025-11-06 22:19:49,807 - circuit_breaker - INFO - Backend responded with status code: 200
+2025-11-06 22:19:49,807 - circuit_breaker - INFO - Backend returned successful response
+2025-11-06 22:19:49,807 - circuit_breaker - INFO - Call completed successfully through circuit breaker
+2025-11-06 22:19:49,808 - circuit_breaker - INFO - Circuit Breaker recorded success
+2025-11-06 22:19:49,808 - circuit_breaker - INFO - Request completed successfully in 0.01 seconds
+2025-11-06 22:19:49,808 - circuit_breaker - INFO - Final Circuit Breaker state: half-open
+2025-11-06 22:19:53,838 - circuit_breaker - INFO - === New request received ===
+2025-11-06 22:19:53,838 - circuit_breaker - INFO - Circuit Breaker state before call: half-open
+2025-11-06 22:19:53,844 - circuit_breaker - INFO - Backend responded with status code: 200
+2025-11-06 22:19:53,844 - circuit_breaker - INFO - Backend returned successful response
+2025-11-06 22:19:53,845 - circuit_breaker - INFO - Call completed successfully through circuit breaker
+2025-11-06 22:19:53,845 - circuit_breaker - WARNING - Circuit Breaker state changed from half-open to closed
+2025-11-06 22:19:53,845 - circuit_breaker - INFO - Circuit Breaker recorded success
+2025-11-06 22:19:53,845 - circuit_breaker - INFO - Request completed successfully in 0.01 seconds
+2025-11-06 22:19:53,845 - circuit_breaker - INFO - Final Circuit Breaker state: closed

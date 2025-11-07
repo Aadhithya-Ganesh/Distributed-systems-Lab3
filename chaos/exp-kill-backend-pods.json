@@ -1,0 +1,52 @@
+{
+  "version": "1.0.0",
+  "title": "Terminate a percentage of backend pods",
+  "steady-state-hypothesis": {
+    "title": "Client and backend are healthy",
+    "probes": [
+      {
+        "type": "probe",
+        "name": "enough-backend-pods",
+        "tolerance": 2,
+        "provider": {
+          "type": "python",
+          "module": "chaosk8s.pod.probes",
+          "func": "count_pods",
+          "arguments": {
+            "label_selector": "app=backend"
+          }
+        }
+      }
+    ]
+  },
+  "method": [
+    {
+      "type": "action",
+      "name": "kill-50-percent-backend",
+      "provider": {
+        "type": "python",
+        "module": "chaosk8s.pod.actions",
+        "func": "terminate_pods",
+        "arguments": {
+          "label_selector": "app=backend",
+          "mode": "percentage",
+          "percentage": 50,
+          "grace_period": 0
+        }
+      },
+      "pauses": { "after": 5 }
+    },
+    {
+      "type": "probe",
+      "name": "client-still-responds",
+      "tolerance": true,
+      "provider": {
+        "type": "http",
+        "timeout": 3000,
+        "verify_tls": false,
+        "url": "http://web-app-service.default.svc.cluster.local/",
+        "method": "GET"
+      }
+    }
+  ]
+}

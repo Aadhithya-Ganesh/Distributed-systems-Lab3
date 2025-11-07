@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: aadhithya123/distributed-systems-server:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - name: backend-logs
+              mountPath: /app/logs
+      volumes:
+        - name: backend-logs
+          hostPath:
+            path: /var/log/backend
+            type: DirectoryOrCreate
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      containers:
+        - name: client
+          image: aadhithya123/distributed-systems-client:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5001
+          volumeMounts:
+            - name: client-logs
+              mountPath: /app/logs
+      volumes:
+        - name: client-logs
+          hostPath:
+            path: /var/log/client
+            type: DirectoryOrCreate

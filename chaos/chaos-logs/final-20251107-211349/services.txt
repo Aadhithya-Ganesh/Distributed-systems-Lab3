@@ -1,0 +1,4 @@
+NAME              TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE     SELECTOR
+backend           LoadBalancer   10.97.140.46    <pending>     5000:30431/TCP   84s     app=backend
+kubernetes        ClusterIP      10.96.0.1       <none>        443/TCP          3h29m   <none>
+web-app-service   LoadBalancer   10.108.19.184   <pending>     80:30001/TCP     84s     app=client

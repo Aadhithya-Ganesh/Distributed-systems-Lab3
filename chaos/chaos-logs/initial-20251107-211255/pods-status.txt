@@ -1,0 +1,3 @@
+NAME                                 READY   STATUS    RESTARTS   AGE   IP               NODE       NOMINATED NODE   READINESS GATES
+backend-deployment-6db7fcfcf-fzkdn   1/1     Running   0          30s   10.244.120.115   minikube   <none>           <none>
+client-deployment-76c8b74995-bzwtt   1/1     Running   0          30s   10.244.120.114   minikube   <none>           <none>

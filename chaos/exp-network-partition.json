@@ -1,0 +1,91 @@
+{
+  "version": "1.0.0",
+  "title": "Simulate network partition between client and backend",
+  "description": "Block all ingress to backend pods using a NetworkPolicy and observe circuit breaker behavior in the client.",
+  "steady-state-hypothesis": {
+    "title": "Client is running",
+    "probes": [
+      {
+        "type": "probe",
+        "name": "client-pod-is-ready",
+        "tolerance": 1,
+        "provider": {
+          "type": "python",
+          "module": "chaosk8s.pod.probes",
+          "func": "count_pods",
+          "arguments": {
+            "label_selector": "app=client",
+            "ns": "default"
+          }
+        }
+      }
+    ]
+  },
+  "method": [
+    {
+      "type": "action",
+      "name": "block-ingress-to-backend",
+      "provider": {
+        "type": "python",
+        "module": "chaosk8s.crd.actions",
+        "func": "create_custom_object",
+        "arguments": {
+          "group": "networking.k8s.io",
+          "version": "v1",
+          "plural": "networkpolicies",
+          "manifest": {
+            "apiVersion": "networking.k8s.io/v1",
+            "kind": "NetworkPolicy",
+            "metadata": {
+              "name": "deny-backend-ingress",
+              "namespace": "default"
+            },
+            "spec": {
+              "podSelector": {
+                "matchLabels": {
+                  "app": "backend"
+                }
+              },
+              "policyTypes": ["Ingress"],
+              "ingress": []
+            }
+          }
+        }
+      },
+      "pauses": {
+        "after": 5
+      }
+    },
+    {
+      "type": "probe",
+      "name": "call-client-and-check-breaker",
+      "provider": {
+        "type": "http",
+        "method": "GET",
+        "url": "http://web-app-service.default.svc.cluster.local/",
+        "timeout": 3000,
+        "verify_tls": false
+      },
+      "tolerance": {
+        "status": 503
+      }
+    }
+  ],
+  "rollbacks": [
+    {
+      "type": "action",
+      "name": "remove-deny-networkpolicy",
+      "provider": {
+        "type": "python",
+        "module": "chaosk8s.crd.actions",
+        "func": "delete_custom_object",
+        "arguments": {
+          "group": "networking.k8s.io",
+          "version": "v1",
+          "plural": "networkpolicies",
+          "name": "deny-backend-ingress"
+        }
+      }
+    }
+  ]
+}

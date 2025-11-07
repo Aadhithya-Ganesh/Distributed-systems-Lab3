@@ -1,0 +1,155 @@
+{
+  "version": "1.0.0",
+  "title": "Circuit (10 calls) + Single-shot Retries with Jitter — with Initial & Final Loads",
+  "description": "Run initial baseline loads, scale backend to 0 and run chaos loads to trip circuit + retries, then recover and run final loads. Collect logs for each phase.",
+  "steady-state-hypothesis": {
+    "title": "Client and Backend Deployments exist",
+    "probes": [
+      {
+        "type": "probe",
+        "name": "client-pod-exists",
+        "tolerance": 1,
+        "provider": {
+          "type": "python",
+          "module": "chaosk8s.pod.probes",
+          "func": "count_pods",
+          "arguments": { "label_selector": "app=client", "ns": "default" }
+        }
+      },
+      {
+        "type": "probe",
+        "name": "backend-pod-exists",
+        "tolerance": 1,
+        "provider": {
+          "type": "python",
+          "module": "chaosk8s.pod.probes",
+          "func": "count_pods",
+          "arguments": { "label_selector": "app=backend", "ns": "default" }
+        }
+      }
+    ]
+  },
+  "method": [
+    {
+      "type": "action",
+      "name": "initial-load-circuit-3",
+      "provider": {
+        "type": "process",
+        "path": "python",
+        "arguments": "load_tester.py initial --task circuit --count 3"
+      }
+    },
+    {
+      "type": "action",
+      "name": "initial-load-retries-1",
+      "provider": {
+        "type": "process",
+        "path": "python",
+        "arguments": "load_tester.py initial --task retries"
+      }
+    },
+    {
+      "type": "action",
+      "name": "collect-initial-logs",
+      "provider": {
+        "type": "process",
+        "path": "python",
+        "arguments": "log_collector.py initial"
+      }
+    },
+    {
+      "type": "action",
+      "name": "scale-down-backend",
+      "provider": {
+        "type": "python",
+        "module": "chaosk8s.deployment.actions",
+        "func": "scale_deployment",
+        "arguments": {
+          "name": "backend-deployment",
+          "ns": "default",
+          "replicas": 0
+        }
+      },
+      "pauses": { "after": 10 }
+    },
+    {
+      "type": "action",
+      "name": "during-chaos-load-circuit-10",
+      "provider": {
+        "type": "process",
+        "path": "python",
+        "arguments": "load_tester.py during-chaos --task circuit --count 10"
+      }
+    },
+    {
+      "type": "action",
+      "name": "during-chaos-load-retries-1",
+      "provider": {
+        "type": "process",
+        "path": "python",
+        "arguments": "load_tester.py during-chaos --task retries"
+      }
+    },
+    {
+      "type": "action",
+      "name": "collect-during-chaos-logs",
+      "provider": {
+        "type": "process",
+        "path": "python",
+        "arguments": "log_collector.py during-chaos"
+      }
+    }
+  ],
+  "rollbacks": [
+    {
+      "type": "action",
+      "name": "scale-up-backend",
+      "provider": {
+        "type": "python",
+        "module": "chaosk8s.deployment.actions",
+        "func": "scale_deployment",
+        "arguments": {
+          "name": "backend-deployment",
+          "ns": "default",
+          "replicas": 1
+        }
+      }
+    },
+    {
+      "type": "action",
+      "name": "post-recovery-wait",
+      "provider": {
+        "type": "process",
+        "path": "python",
+        "arguments": "-c \"import time; time.sleep(15)\""
+      }
+    },
+    {
+      "type": "action",
+      "name": "final-load-circuit-3",
+      "provider": {
+        "type": "process",
+        "path": "python",
+        "arguments": "load_tester.py final --task circuit --count 3"
+      }
+    },
+    {
+      "type": "action",
+      "name": "final-load-retries-1",
+      "provider": {
+        "type": "process",
+        "path": "python",
+        "arguments": "load_tester.py final --task retries"
+      }
+    },
+    {
+      "type": "action",
+      "name": "collect-final-logs",
+      "provider": {
+        "type": "process",
+        "path": "python",
+        "arguments": "log_collector.py final"
+      }
+    }
+  ]
+}

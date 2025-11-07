@@ -1,0 +1,75 @@
+2025-11-07 21:12:28,354 - root - INFO - === FLASK APP STARTING ===
+=== FLASK APP STARTING (print) ===
+ * Serving Flask app 'app'
+ * Debug mode: on
+2025-11-07 21:12:28,385 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://10.244.120.114:5001
+2025-11-07 21:12:28,385 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-11-07 21:12:28,386 - werkzeug - INFO -  * Restarting with stat
+2025-11-07 21:12:28,497 - root - INFO - === FLASK APP STARTING ===
+2025-11-07 21:12:28,504 - werkzeug - WARNING -  * Debugger is active!
+2025-11-07 21:12:28,505 - werkzeug - INFO -  * Debugger PIN: 210-633-354
+2025-11-07 21:12:54,323 - client.circuit - INFO - CIRCUIT ENDPOINT CALLED | mode=chaos | url=http://backend:5000/chaos
+2025-11-07 21:12:54,328 - client.circuit - INFO - CIRCUIT SUCCESS
+2025-11-07 21:12:54,328 - client.circuit - INFO - CIRCUIT CALL SUCCESS
+2025-11-07 21:12:54,328 - werkzeug - INFO - 127.0.0.1 - - [07/Nov/2025 21:12:54] "GET /circuit?mode=chaos HTTP/1.1" 200 -
+2025-11-07 21:12:54,639 - client.circuit - INFO - CIRCUIT ENDPOINT CALLED | mode=chaos | url=http://backend:5000/chaos
+2025-11-07 21:12:54,642 - client.circuit - INFO - CIRCUIT SUCCESS
+2025-11-07 21:12:54,642 - client.circuit - INFO - CIRCUIT CALL SUCCESS
+2025-11-07 21:12:54,642 - werkzeug - INFO - 127.0.0.1 - - [07/Nov/2025 21:12:54] "GET /circuit?mode=chaos HTTP/1.1" 200 -
+2025-11-07 21:12:54,961 - client.circuit - INFO - CIRCUIT ENDPOINT CALLED | mode=chaos | url=http://backend:5000/chaos
+2025-11-07 21:12:54,963 - client.circuit - INFO - CIRCUIT SUCCESS
+2025-11-07 21:12:54,963 - client.circuit - INFO - CIRCUIT CALL SUCCESS
+2025-11-07 21:12:54,963 - werkzeug - INFO - 127.0.0.1 - - [07/Nov/2025 21:12:54] "GET /circuit?mode=chaos HTTP/1.1" 200 -
+2025-11-07 21:12:55,445 - client.retries - INFO - RETRIES ENDPOINT CALLED | mode=chaos | url=http://backend:5000/chaos
+2025-11-07 21:12:55,447 - client.retries - INFO - RETRY: Attempting backend call
+2025-11-07 21:12:55,449 - client.retries - INFO - RETRY: Backend responded with 200
+2025-11-07 21:12:55,449 - client.retries - INFO - RETRY SUCCESS: Took 0.00s | delays=[]
+2025-11-07 21:12:55,450 - werkzeug - INFO - 127.0.0.1 - - [07/Nov/2025 21:12:55] "GET /retries?mode=chaos HTTP/1.1" 200 -
+2025-11-07 21:13:06,343 - client.circuit - INFO - CIRCUIT ENDPOINT CALLED | mode=chaos | url=http://backend:5000/chaos
+2025-11-07 21:13:06,345 - client.circuit - ERROR - CIRCUIT FAILURE: ConnectionError: HTTPConnectionPool(host='backend', port=5000): Max retries exceeded with url: /chaos (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x764a370a7650>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2025-11-07 21:13:06,345 - client.circuit - ERROR - CIRCUIT CALL FAILED: HTTPConnectionPool(host='backend', port=5000): Max retries exceeded with url: /chaos (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x764a370a7650>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2025-11-07 21:13:06,345 - werkzeug - INFO - 127.0.0.1 - - [07/Nov/2025 21:13:06] "[35m[1mGET /circuit?mode=chaos HTTP/1.1[0m" 500 -
+2025-11-07 21:13:07,172 - client.circuit - INFO - CIRCUIT ENDPOINT CALLED | mode=chaos | url=http://backend:5000/chaos
+2025-11-07 21:13:07,174 - client.circuit - ERROR - CIRCUIT FAILURE: ConnectionError: HTTPConnectionPool(host='backend', port=5000): Max retries exceeded with url: /chaos (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x764a370b8510>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2025-11-07 21:13:07,174 - client.circuit - WARNING - CIRCUIT STATE CHANGE: closed -> open | CB_STATE=open
+2025-11-07 21:13:07,174 - client.circuit - ERROR - CIRCUIT BREAKER OPEN - FAST FAIL | CB_FAST_FAIL=1
+2025-11-07 21:13:07,174 - werkzeug - INFO - 127.0.0.1 - - [07/Nov/2025 21:13:07] "[35m[1mGET /circuit?mode=chaos HTTP/1.1[0m" 503 -
+2025-11-07 21:13:07,686 - client.circuit - INFO - CIRCUIT ENDPOINT CALLED | mode=chaos | url=http://backend:5000/chaos
+2025-11-07 21:13:07,686 - client.circuit - ERROR - CIRCUIT BREAKER OPEN - FAST FAIL | CB_FAST_FAIL=1
+2025-11-07 21:13:07,686 - werkzeug - INFO - 127.0.0.1 - - [07/Nov/2025 21:13:07] "[35m[1mGET /circuit?mode=chaos HTTP/1.1[0m" 503 -
+2025-11-07 21:13:08,213 - client.circuit - INFO - CIRCUIT ENDPOINT CALLED | mode=chaos | url=http://backend:5000/chaos
+2025-11-07 21:13:08,214 - client.circuit - ERROR - CIRCUIT BREAKER OPEN - FAST FAIL | CB_FAST_FAIL=1
+2025-11-07 21:13:08,214 - werkzeug - INFO - 127.0.0.1 - - [07/Nov/2025 21:13:08] "[35m[1mGET /circuit?mode=chaos HTTP/1.1[0m" 503 -
+2025-11-07 21:13:08,729 - client.circuit - INFO - CIRCUIT ENDPOINT CALLED | mode=chaos | url=http://backend:5000/chaos
+2025-11-07 21:13:08,729 - client.circuit - ERROR - CIRCUIT BREAKER OPEN - FAST FAIL | CB_FAST_FAIL=1
+2025-11-07 21:13:08,730 - werkzeug - INFO - 127.0.0.1 - - [07/Nov/2025 21:13:08] "[35m[1mGET /circuit?mode=chaos HTTP/1.1[0m" 503 -
+2025-11-07 21:13:09,259 - client.circuit - INFO - CIRCUIT ENDPOINT CALLED | mode=chaos | url=http://backend:5000/chaos
+2025-11-07 21:13:09,259 - client.circuit - ERROR - CIRCUIT BREAKER OPEN - FAST FAIL | CB_FAST_FAIL=1
+2025-11-07 21:13:09,259 - werkzeug - INFO - 127.0.0.1 - - [07/Nov/2025 21:13:09] "[35m[1mGET /circuit?mode=chaos HTTP/1.1[0m" 503 -
+2025-11-07 21:13:09,788 - client.circuit - INFO - CIRCUIT ENDPOINT CALLED | mode=chaos | url=http://backend:5000/chaos
+2025-11-07 21:13:09,788 - client.circuit - ERROR - CIRCUIT BREAKER OPEN - FAST FAIL | CB_FAST_FAIL=1
+2025-11-07 21:13:09,788 - werkzeug - INFO - 127.0.0.1 - - [07/Nov/2025 21:13:09] "[35m[1mGET /circuit?mode=chaos HTTP/1.1[0m" 503 -
+2025-11-07 21:13:10,305 - client.circuit - INFO - CIRCUIT ENDPOINT CALLED | mode=chaos | url=http://backend:5000/chaos
+2025-11-07 21:13:10,305 - client.circuit - ERROR - CIRCUIT BREAKER OPEN - FAST FAIL | CB_FAST_FAIL=1
+2025-11-07 21:13:10,305 - werkzeug - INFO - 127.0.0.1 - - [07/Nov/2025 21:13:10] "[35m[1mGET /circuit?mode=chaos HTTP/1.1[0m" 503 -
+2025-11-07 21:13:10,819 - client.circuit - INFO - CIRCUIT ENDPOINT CALLED | mode=chaos | url=http://backend:5000/chaos
+2025-11-07 21:13:10,819 - client.circuit - ERROR - CIRCUIT BREAKER OPEN - FAST FAIL | CB_FAST_FAIL=1
+2025-11-07 21:13:10,819 - werkzeug - INFO - 127.0.0.1 - - [07/Nov/2025 21:13:10] "[35m[1mGET /circuit?mode=chaos HTTP/1.1[0m" 503 -
+2025-11-07 21:13:11,335 - client.circuit - INFO - CIRCUIT ENDPOINT CALLED | mode=chaos | url=http://backend:5000/chaos
+2025-11-07 21:13:11,335 - client.circuit - ERROR - CIRCUIT BREAKER OPEN - FAST FAIL | CB_FAST_FAIL=1
+2025-11-07 21:13:11,336 - werkzeug - INFO - 127.0.0.1 - - [07/Nov/2025 21:13:11] "[35m[1mGET /circuit?mode=chaos HTTP/1.1[0m" 503 -
+2025-11-07 21:13:12,036 - client.retries - INFO - RETRIES ENDPOINT CALLED | mode=chaos | url=http://backend:5000/chaos
+2025-11-07 21:13:12,036 - client.retries - INFO - RETRY: Attempting backend call
+2025-11-07 21:13:12,038 - client.retries - WARNING - RETRY WAIT (next): 2.25s
+2025-11-07 21:13:14,290 - client.retries - INFO - RETRY: Attempting backend call
+2025-11-07 21:13:14,291 - client.retries - WARNING - RETRY WAIT (next): 3.99s
+2025-11-07 21:13:18,279 - client.retries - INFO - RETRY: Attempting backend call
+2025-11-07 21:13:18,280 - client.retries - WARNING - RETRY WAIT (next): 5.57s
+2025-11-07 21:13:23,850 - client.retries - INFO - RETRY: Attempting backend call
+2025-11-07 21:13:23,851 - client.retries - WARNING - RETRY WAIT (next): 8.63s
+2025-11-07 21:13:32,483 - client.retries - INFO - RETRY: Attempting backend call
+2025-11-07 21:13:32,484 - client.retries - ERROR - RETRY FAILED: Took 20.45s - RetryError[<Future at 0x764a370b9190 state=finished raised ConnectionError>] | delays=[2.25, 3.99, 5.57, 8.63]
+2025-11-07 21:13:32,485 - werkzeug - INFO - 127.0.0.1 - - [07/Nov/2025 21:13:32] "[35m[1mGET /retries?mode=chaos HTTP/1.1[0m" 500 -

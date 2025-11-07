@@ -1,0 +1,10 @@
+2025-11-06 22:19:16,635 - retries - INFO - === New request received ===
+2025-11-06 22:19:16,636 - retries - INFO - Attempting to call backend service...
+2025-11-06 22:19:16,654 - retries - INFO - Backend responded with status code: 500
+2025-11-06 22:19:16,655 - retries - WARNING - Attempt 1 failed. Next retry at: 22:19:19 (in 2.97s). Error: HTTPError
+2025-11-06 22:19:19,629 - retries - INFO - Attempting to call backend service...
+2025-11-06 22:19:19,635 - retries - INFO - Backend responded with status code: 500
+2025-11-06 22:19:19,637 - retries - WARNING - Attempt 2 failed. Next retry at: 22:19:23 (in 3.81s). Error: HTTPError
+2025-11-06 22:19:23,453 - retries - INFO - Attempting to call backend service...
+2025-11-06 22:19:23,460 - retries - INFO - Backend responded with status code: 200
+2025-11-06 22:19:23,461 - retries - INFO - Request completed successfully in 6.83 seconds

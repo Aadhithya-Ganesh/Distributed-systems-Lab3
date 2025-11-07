@@ -1,0 +1,13 @@
+2025-11-07 21:05:02,010 - INFO - RETRIES ENDPOINT CALLED | mode=default | url=http://backend:5000/retries
+2025-11-07 21:05:02,011 - INFO - RETRY: Attempting backend call
+2025-11-07 21:05:02,014 - INFO - RETRY: Backend responded with 500
+2025-11-07 21:05:02,015 - WARNING - RETRY WAIT (next): 1.13s
+2025-11-07 21:05:03,149 - INFO - RETRY: Attempting backend call
+2025-11-07 21:05:03,151 - INFO - RETRY: Backend responded with 500
+2025-11-07 21:05:03,152 - WARNING - RETRY WAIT (next): 2.48s
+2025-11-07 21:05:05,632 - INFO - RETRY: Attempting backend call
+2025-11-07 21:05:05,635 - INFO - RETRY: Backend responded with 500
+2025-11-07 21:05:05,636 - WARNING - RETRY WAIT (next): 5.29s
+2025-11-07 21:05:10,925 - INFO - RETRY: Attempting backend call
+2025-11-07 21:05:10,928 - INFO - RETRY: Backend responded with 200
+2025-11-07 21:05:10,928 - INFO - RETRY SUCCESS: Took 8.92s | delays=[1.13, 2.48, 5.29]

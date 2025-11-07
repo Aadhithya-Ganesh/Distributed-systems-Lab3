@@ -1,0 +1,2 @@
+client: client-deployment-76c8b74995-bzwtt
+backend: backend-deployment-6db7fcfcf-fzkdn
